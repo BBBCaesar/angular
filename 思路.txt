@@ -1,0 +1,216 @@
+1、模块化开发
+	webpack
+	安装插件：webpack/style-loader/css-loader/node-sass/sass-loader/less/less-loader/file-loader/url-loader/webpack-dev-server
+	配置webpack.config.js，自行查看源码
+	写一个入口文件script/main.js
+	输出文件bundle.js
+2、配置路由
+	写一个路由--spa--单页面框架---zepto、touch（tap）---load(ajax)
+	创建两个文件
+		html
+			home.html
+			kind.html
+			cart.html
+			user.html
+			more.html
+		script
+			Home.js
+			Kind.js
+			Cart.js
+			User.js
+			More.js
+	以kind.html为例
+		<ul id="kindHeader">
+			<li class="logo">
+				<i class="iconfont">&#xe600;</i>
+			</li>
+			<li>
+				分类
+			</li>
+			<li>
+				
+			</li>
+		</ul>
+		<div id="kindContent">
+			分类内容1234
+		</div>
+	Kind.js中：
+		module.exports = {
+			loadKindHeader:function(){
+				$("#header").load("html/kind.html #kindHeader",function(){
+					console.log("ok1")
+				})
+			},
+			loadKindContent:function(){
+				$("#content").load("./html/kind.html #kindContent",function(){
+					console.log("ok12")
+				})
+			}
+		}
+	在main.js中配置我们的路由
+		加载各个模块
+			var Home = require("./Home");
+			var Kind = require("./kind");
+			var Cart = require("./Cart");
+			var User = require("./User");
+			var More = require("./More");
+		点击底部导航切换路由
+			$("#footer").find("li").on("tap",function(){
+				var $index = $(this).index();
+				$(this).addClass("acive").siblings().removeClass("acive");
+				switch ($index){
+					case 0:
+						Home.loadHomeHeader();
+						Home.loadHomeContent();
+						break;
+					case 1:
+						Kind.loadKindHeader();
+						Kind.loadKindContent();
+						break;
+					case 2:
+						Cart.loadCartHeader();
+						Cart.loadCartContent();
+						break;
+					case 3:
+						User.loadUserHeader();
+						User.loadUserContent();
+						break;
+					case 4:
+						More.loadMoreHeader();
+						More.loadMoreContent();
+						break;
+					default:
+						break;
+				}
+			});
+3、模块开发
+	3.1首页相关模块（详情模块）
+		写静态页面，具体查看源码
+			注意点：如果数据是需要进行ajax请求，实例化对象时一定要等请求数据成功，即在success函数内部进行创建
+		写js
+			在home.js中有两个ajax请求
+				banner图请求
+					http://datainfo.duapp.com/shopdata/getBanner.php
+					JSON.parse(data[0].goodsBenUrl)[0]----第一个0表示的是我们的数据的序号，第二个0不能更改
+					在success中创建swiper实例
+						var swiper = new Swiper(".swiper-container",{
+							autoplay:3000,
+							loop:true,
+							//用户操作完毕后换可以继续自动轮播，默认是禁止的
+							autoplayDisableOnInteraction:false,
+							pagination: '.swiper-pagination'
+						})
+				热推列表请求
+					折扣和价格显示
+						判断折扣是否为0.如果为0，显示为不打折，否则显示产品的价格为(price*discount/10).toFixed(1)----保留小数点后几位
+						填充数据
+						在success中我们需要点击产品进入产品详情，点击按钮需要添加到购物车
+							事件的冒泡
+							获取点击的是哪一个
+								給li添加了一个class--proItem和一个自定义属性goodsID
+									$(".proItem").on("tap",function(){
+										//获取goodsID
+										var goodsID = $(this).attr("goodsID");
+										//进入详情页
+										
+										//引入需要的Detail模块
+										//创建Detail模块（header/content/footer）--页面结构见源码
+										var Detail = require("./Detail");
+										//两个参数代表，第一个从哪里来，第二个是哪一个产品（如果标题显示产品名称，那么需要，否则不需要）
+										Detail.loadDetailHeader("home",goodsID);
+										//页面内容用哪一个产品
+										Detail.loadDetailContent(goodsID);
+										//生成我们的底部
+										Detail.loadDetailFooter();
+									})
+	3.2详情模块
+		有自己的底部
+			Detail.js中设置了一个全局变量mySwiper，用来后期我们需要在多个方法中使用（内容和底部联动）
+		内容区域
+			swiper（官网的api文档中
+				methods(swiper方法)---mySwiper.slideTo(index, speed, runCallbacks)
+				callbacks(回调函数)---onSlideChangeEnd(swiper)
+				touches(触发条件)---resistanceRatio
+			）
+				3个选项
+					div.swiper-container>div.swiper-wrapper>div.swiper-slide*3
+				
+				加载完毕之后实例化swiper
+					mySwiper = new Swiper(".swiper-container",{
+						//抵抗率。边缘抵抗力的大小比例。值越小抵抗越大越难将slide拖离边缘，0时完全无法拖离。
+						resistanceRatio:0,
+		//				loop:true,//不能随意设置，否则你的js复杂度得上升1个世纪
+						//当我们的页面切换完毕之后的一个事件
+						onSlideChangeEnd: function(swiper){//swiper可以随意更改，但是不建议更改
+		//				      alert(swiper.activeIndex) //切换结束时，告诉我现在是第几个slide
+						      var _index = swiper.activeIndex;
+						      
+						      //因为swiper切换导致我们底部也在动，添加和刷出状态（样式）
+							$("#footer").find("li").eq(_index).addClass("acive").siblings().removeClass("acive")
+						    }
+					})
+				底部点击切换事件
+					$("#footer").find("li").on("tap",function(){
+						//获取索引值
+						var $index = $(this).index();
+						//控制swiper去切换到哪一个，$index表示索引值，1000表示多长时间切换完，
+						//false可选，boolean，设置为false时不会触发onSlideChange回调函数。
+						mySwiper.slideTo($index, 1000, false);//切换到第一个slide，速度为1秒
+						//底部自身加样式
+						$(this).addClass("acive").siblings().removeClass("acive")
+					})
+	3.3详情模块
+		添加一个swiper
+			结构一样
+			ajax获取数据，更换我们的图片
+			var proSwiper =new Swiper("#proSwiper",{
+				loop:true,
+				preventLinksPropagation : false,//组织滑过的时候触发点击tap事件
+				pagination: '.swiper-pagination'
+			})
+		双击查看大图
+			在index.html中添加一个mask遮罩层
+			$(".maskImg").doubleTap(function(){
+				$("#mask").show();
+				$("#mask").find("img").attr("src",$(this).attr("imgsrc"));
+			})
+		作业：填充我们详情页面的数据（介绍、详情、实拍）
+	3.4注册模块，登录模块
+		来回跳转
+			打哪来回哪去，组件（模块）思想：我不管谁去调用，我只管放开权限，谁愿意谁去require我，那么你就可以调用
+			传参确定回那里去
+			组件思想：面向对象思想一致，this关键词，调用当前对象（组件、模块）内部的方法，注意一个作用域的问题var that = this;
+		多入口判断用户是不是已经登录
+			首页加入购物车（未登录去登陆，如果登录执行组件添加到购物车AddCart）
+			底部购物车（未登录去登陆，如果登录去购物车）
+			底部我的（如果登录不显示登录注册按钮，否则显示）
+	3.5购物车模块
+		思想：操作当前的数据，通过自定义属性val实现，事件用class去写，通过$(this).attr("val")获取自定义属性的值，然后再次进行处理
+			删除、数量加减、总数量、总价格
+		结果
+			滑动删除效果
+				touch.js中的swiftLeft和swipeRight
+				fx.js中的animate()
+		
+		编辑
+			针对数量的加减，总数量，总价格的处理
+		结算
+			全部删除数据库中的数据，在删除之前保存到本地，当我们点击我的订单的时候，从本地中调取数据并且展示
+	3.6搜索模块
+		search.html  Search.js
+	3.7分类模块
+		kind.html Kind.js
+		kingList.html KindList.js
+	3.8订单模块
+		order.html Order.js
+		数据从本地获取
+			每次支付完成先取出之前的数据，然后在拼接新的数据，再存入本地
+				如果之前有这个数据，那么需要数量进行增加（js数组去重+统计数量）
+	3.9收藏模块
+		attention.html Attention.js
+		详情模块里面添加一个收藏按钮
+			点击收藏的时候，将这个数据的goodsID进行存储起来，
+			点击我的收藏的时侯，根据goodsID去请求数据
+	3.10我的信息
+		userInfo.html userInfo.js
+			

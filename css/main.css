@@ -1,0 +1,215 @@
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+body,
+button,
+input,
+select,
+textarea {
+  font-size: 12px;
+  line-height: 1.5;
+  font-family: arial;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+}
+address,
+cite,
+dfn,
+em,
+var {
+  font-style: normal;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: couriernew, courier, monospace;
+}
+small {
+  font-size: 12px;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+sup {
+  vertical-align: text-top;
+}
+sub {
+  vertical-align: text-bottom;
+}
+legend {
+  color: #000;
+}
+fieldset,
+img {
+  border: 0;
+  display: block;
+}
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+html {
+  font-size: 100px;
+  width: 100%;
+  height: 100%;
+}
+body {
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+@font-face {
+  font-family: 'iconfont';/* project id 194811 */
+  src: url('//at.alicdn.com/t/font_nv5k59waz7yi7ldi.eot');
+  src: url('//at.alicdn.com/t/font_nv5k59waz7yi7ldi.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_nv5k59waz7yi7ldi.woff') format('woff'), url('//at.alicdn.com/t/font_nv5k59waz7yi7ldi.ttf') format('truetype'), url('//at.alicdn.com/t/font_nv5k59waz7yi7ldi.svg#iconfont') format('svg');
+}
+@font-face {
+  font-family: font2;
+  src: url(Fontin_Sans_BI_45b.otf);
+}
+header {
+  width: 100%;
+  height: 0.88rem;
+  background-color: #e4366b;
+}
+header ul {
+  display: flex;
+  height: 100%;
+  color: #fff;
+  font-size: 0.4rem;
+}
+header ul li {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+header ul li:nth-child(1),
+header ul li:nth-child(3) {
+  width: 1.2rem;
+}
+header ul li:nth-child(1) {
+  text-shadow: 1px 1px 1px #000;
+  font-family: font2;
+}
+header ul li:nth-child(3) i.iconfont {
+  font-size: 0.48rem;
+}
+header ul li:nth-child(2) {
+  flex: 1;
+}
+header ul li:nth-child(2) .searchBox {
+  width: 100%;
+  height: 60%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  color: #999;
+  border-radius: 0.1rem;
+}
+header ul li:nth-child(2) .searchBox i {
+  width: 0.4rem;
+  display: block;
+}
+header ul li:nth-child(2) .searchBox i.iconfont {
+  margin-top: 0.03rem;
+  margin-left: 0.05rem;
+}
+header ul li:nth-child(2) .searchBox span {
+  display: block;
+  float: left;
+  font-size: 0.24rem;
+}
+section {
+  flex: 1;
+}
+footer {
+  width: 100%;
+  height: 1rem;
+  background-color: #333;
+}
+footer ul {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+footer ul li {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-top: 0.06rem solid transparent;
+  color: #fff;
+}
+footer ul li i.iconfont {
+  display: block;
+  font-size: 0.4rem;
+}
+footer ul li p {
+  font-size: 0.20rem;
+  margin-top: 0.03rem;
+}
+footer ul li.acive {
+  border-top: 0.06rem solid #e4366b;
+  color: #e4366b;
+}
+/*# sourceMappingURL=main.css.map */
